@@ -3,9 +3,13 @@ import { model, Schema } from "mongoose";
 const productSchema = new Schema(
   {
     name: { type: String, required: true },
-    type: { type: Array, required: true },
+    type: { 
+      type: String, 
+      enum: ["Dairy", "Cereal", "Drinks", "Snacks", "Bread", "Fruit", "Other"],
+      required: true 
+    },
     price: { type: Number, required: true },
-    expiration: { type: Date | Boolean, required: true },
+    expiration: { type: Date, required: true, default: null },
   },
   {
     timestamps: true,

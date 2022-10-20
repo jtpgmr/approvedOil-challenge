@@ -1,0 +1,210 @@
+{
+	"info": {
+		"_postman_id": "422b5fb9-9e18-4592-aeef-1e83040a7845",
+		"name": "ApprovedOil",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21247349"
+	},
+	"item": [
+		{
+			"name": "Customer",
+			"item": [
+				{
+					"name": "Register Customer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{name}}\",\r\n    \"email\": \"{{email}}\",\r\n    \"address\": {\r\n        \"country\": \"{{country}}\",\r\n        \"state\": \"{{state}}\",\r\n        \"city\": \"{{city}}\",\r\n        \"street\": \"{{street}}\",\r\n        \"zip\": \"{{zipCode}}\"\r\n    },\r\n    \"phone\": \"{{phone}}\",\r\n    \"password\": \"{{password}}\",\r\n    \"confirmPassword\": \"{{password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/customers/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"customers",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Customers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/customers/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"customers",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Customer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/customers/{{customerId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"customers",
+								"{{customerId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Customer Profile",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"address\": {\r\n        \"street\": \"333 test ave\",\r\n        \"zip\": \"55555\"\r\n    },\r\n    \"name\": \"You\",\r\n    \"password\": \"heyyyyy\" // due to the Yup noUnknown() method, unspecified fields, such as passwords, will not update\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/customers/{{customerId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"customers",
+								"{{customerId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Customer",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/customers/{{customerId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"customers",
+								"{{customerId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "name",
+			"value": "JLC",
+			"type": "string"
+		},
+		{
+			"key": "email",
+			"value": "test@test.com",
+			"type": "string"
+		},
+		{
+			"key": "password",
+			"value": "@min6chars",
+			"type": "string"
+		},
+		{
+			"key": "address",
+			"value": "111 Street Ave.",
+			"type": "string"
+		},
+		{
+			"key": "phone",
+			"value": "1-234-567-8910",
+			"type": "string"
+		},
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:4000",
+			"type": "string"
+		},
+		{
+			"key": "customerId",
+			"value": "<Mongo Customer ID string here>",
+			"type": "string"
+		},
+		{
+			"key": "country",
+			"value": "USA",
+			"type": "string"
+		},
+		{
+			"key": "state",
+			"value": "NY",
+			"type": "string"
+		},
+		{
+			"key": "city",
+			"value": "NYC",
+			"type": "string"
+		},
+		{
+			"key": "street",
+			"value": "111 Street Ave.",
+			"type": "string"
+		},
+		{
+			"key": "zipCode",
+			"value": "11111",
+			"type": "string"
+		}
+	]
+}
