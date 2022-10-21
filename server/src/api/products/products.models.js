@@ -1,15 +1,17 @@
 import { model, Schema } from "mongoose";
 
+export const productTypeEnum = ["Dairy", "Cereal", "Drinks", "Snacks", "Bread", "Fruit", "Other"]
+
 const productSchema = new Schema(
   {
     name: { type: String, required: true },
     type: { 
-      type: String, 
-      enum: ["Dairy", "Cereal", "Drinks", "Snacks", "Bread", "Fruit", "Other"],
-      required: true 
+      type: Schema.Types.Mixed, 
+      enum: productTypeEnum,
+      default: null
     },
     price: { type: Number, required: true },
-    expiration: { type: Date, required: true, default: null },
+    expiration: { type: Date, default: null },
   },
   {
     timestamps: true,
