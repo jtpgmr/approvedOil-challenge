@@ -1,6 +1,6 @@
 import { model, Schema } from "mongoose";
 
-export const productTypeEnum = ["Dairy", "Cereal", "Drinks", "Snacks", "Bread", "Fruit", "Other"]
+export const productTypeEnum = ["dairy", "cereal", "drinks", "snacks", "bread", "fruit", "dessert", "other"]
 
 const productSchema = new Schema(
   {

@@ -1,12 +1,11 @@
 import * as Yup from "yup"
-import idParam from "../../utils/idParam.js";
 
 const orderSchema = Yup.object({
-  customer: idParam.required(),
-  product: Yup.object.shape({
-    productId: idParam.required(),
+  customer: Yup.string().length(24).required(),
+  product: Yup.array(Yup.object().shape({
+    productId: Yup.string().length(24).required(),
     quantity: Yup.number().min(1).required()
-  }),
+  })).min(1).required(),
 })
 
 export default orderSchema;

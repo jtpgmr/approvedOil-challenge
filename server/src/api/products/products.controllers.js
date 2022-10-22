@@ -1,14 +1,17 @@
 import _ from "lodash"
 
 import ProductModel from "./products.models.js";
+import { filterObject, filterArrayOfObjects } from "../../utils/filterJsonResponse.js";
+
+const omitProductDataArray = ["_id", "createdAt", "updatedAt", "__v"]
 
 const findAllProductsController = async (req, res) => {
   try {
-    let products = await ProductModel.find();
+    const products = await ProductModel.find();
 
-    products = filterJsonResponse(products)
+    const filteredProducts = filterArrayOfObjects(products, omitProductDataArray)
   
-    res.status(201).json(products);
+    res.status(200).json(filteredProducts);
     
   } catch (err) {
     res.status(500).json(err);
@@ -18,11 +21,11 @@ const findAllProductsController = async (req, res) => {
 const findSingleProductController = async (req, res) => {
   try {
     const { id } = req.params
-    let product = await ProductModel.findById(id);
+    const product = await ProductModel.findById(id);
 
-    product = _.omit(product.toObject(), omitDataArray)
+    const filteredProduct = filterObject(product, omitProductDataArray)
   
-    res.status(201).json(product);
+    res.status(200).json(filteredProduct);
     
   } catch (err) {
     res.status(500).json(err);
@@ -31,11 +34,11 @@ const findSingleProductController = async (req, res) => {
 
 const registerProductController = async (req, res) => {
   try {
-    let newProduct = await ProductModel.create(req.body);
+    const newProduct = await ProductModel.create(req.body);
 
-    newProduct = _.omit(newProduct.toObject(), omitDataArray)
+    const filteredNewProduct = filterObject(newProduct, omitProductDataArray)
   
-    res.status(201).json(newProduct);
+    res.status(201).json(filteredNewProduct);
     
   } catch (err) {
     res.status(500).json(err);
@@ -45,8 +48,7 @@ const registerProductController = async (req, res) => {
 const updateProductController = async (req, res) => {
   try {
     const { id } = req.params
-    console.log(id)
-    const product = await ProductModel.findByIdAndUpdate({
+    const updatedProduct = await ProductModel.findByIdAndUpdate({
       _id: id
     },
     {
@@ -54,12 +56,14 @@ const updateProductController = async (req, res) => {
     },
     {
       returnDocument: "after"
-    }
-    )
+    })
 
-    const filteredProduct = _.omit(product.toObject(), omitDataArray)
+    // can create admin model so that if a user is an admin,
+    // they receive an unfiltered/complete version of the data
+
+    const filteredUpdatedProduct = filterObject(updatedProduct, omitProductDataArray)
   
-    res.status(201).json(filteredProduct);
+    res.status(201).json(filteredUpdatedProduct);
     
   } catch (err) {
     res.status(500).json(err);
@@ -76,16 +80,6 @@ const deleteProductController = async (req, res) => {
   } catch (err) {
     res.status(500).json(err);
   }
-}
-
-const omitDataArray = ["_id", "createdAt", "updatedAt", "__v"]
-
-const filterJsonResponse = (mongoObj) => {
-  const filteredResponse =  mongoObj.map(doc => {
-      return _.omit(doc.toObject(), omitDataArray)
-  })
-
-  return filteredResponse
 }
 
 export { findAllProductsController, findSingleProductController, registerProductController, updateProductController, deleteProductController }

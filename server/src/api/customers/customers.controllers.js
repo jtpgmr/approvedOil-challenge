@@ -1,11 +1,17 @@
-import CustomerModel from "./customers.models.js";
 import _ from "lodash"
+
+import { filterObject, filterArrayOfObjects } from "../../utils/filterJsonResponse.js";
+import CustomerModel from "./customers.models.js";
+
+const omitCustomerDataArray = ["password", "_id", "__v", "updatedAt"]
 
 const findAllCustomersController = async (req, res) => {
   try {
     const customers = await CustomerModel.find();
   
-    res.status(201).json(customers);
+    const filteredCustomers = filterArrayOfObjects(customers, omitCustomerDataArray)
+  
+    res.status(200).json(filteredCustomers);
     
   } catch (err) {
     res.status(500).json(err);
@@ -16,8 +22,10 @@ const findSingleCustomerController = async (req, res) => {
   try {
     const { id } = req.params
     const customer = await CustomerModel.findById(id);
+
+    const filteredCustomer = filterObject(customer, omitCustomerDataArray)
   
-    res.status(201).json(customer);
+    res.status(200).json(filteredCustomer);
     
   } catch (err) {
     res.status(500).json(err);
@@ -36,11 +44,11 @@ const registerCustomerController = async (req, res) => {
     }
 
 
-    let newCustomer = await CustomerModel.create(req.body);
+    const newCustomer = await CustomerModel.create(req.body);
 
-    newCustomer = _.omit(newCustomer.toObject(), ["password", "_id", "__v", "updatedAt"])
+    const filterNewCustomer = filterObject(newCustomer, omitCustomerDataArray)
   
-    res.status(201).json(newCustomer);
+    res.status(201).json(filterNewCustomer);
     
   } catch (err) {
     res.status(500).json(err);
@@ -50,8 +58,8 @@ const registerCustomerController = async (req, res) => {
 const updateCustomerController = async (req, res) => {
   try {
     const { id } = req.params
-    console.log(id)
-    const customer = await CustomerModel.findByIdAndUpdate({
+
+    const updatedCustomer = await CustomerModel.findByIdAndUpdate({
       _id: id
     },
     {
@@ -59,10 +67,15 @@ const updateCustomerController = async (req, res) => {
     },
     {
       returnDocument: "after"
+    })
+
+    if (!updatedCustomer) {
+      return res.status(404).json("Customer profile does not exist.")
     }
-    )
   
-    res.status(201).json(customer);
+    const filteredUpdatedCustomer = filterObject(updatedCustomer, omitCustomerDataArray)
+  
+    res.status(200).json(filteredUpdatedCustomer);
     
   } catch (err) {
     res.status(500).json(err);
@@ -72,7 +85,11 @@ const updateCustomerController = async (req, res) => {
 const deleteCustomerController = async (req, res) => {
   try {
     const { id } = req.params
-    await CustomerModel.findByIdAndDelete(id);
+    const deletedCustomer = await CustomerModel.findByIdAndDelete(id);
+
+    if (!deletedCustomer) {
+      return res.status(404).json("Customer profile does not exist.")
+    }
   
     res.status(200).json("Customer profile has been deleted.");
     

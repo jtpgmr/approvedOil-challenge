@@ -19,12 +19,11 @@ const orderSchema = new Schema(
       required: true
     },
     product: {
-      type: orderedProductSchema,
+      type: [orderedProductSchema],
       required: true
     },
     purchaseDate: {
       type: Date,
-      required: true
     }
   },
   {
