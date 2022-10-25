@@ -1,6 +1,7 @@
 import _ from "lodash"
 
 import { filterObject, filterArrayOfObjects } from "../../utils/filterJsonResponse.js";
+import OrderModel from "../orders/orders.models.js";
 import CustomerModel from "./customers.models.js";
 
 const omitCustomerDataArray = ["password", "_id", "__v", "updatedAt"]
@@ -85,11 +86,19 @@ const updateCustomerController = async (req, res) => {
 const deleteCustomerController = async (req, res) => {
   try {
     const { id } = req.params
-    const deletedCustomer = await CustomerModel.findByIdAndDelete(id);
 
-    if (!deletedCustomer) {
+    if (!(await CustomerModel.findById(id))) {
       return res.status(404).json("Customer profile does not exist.")
     }
+
+    // DELETES ALL ORDERS RELATING TO THE CUSTOMER
+    const customerOrderHistory = await OrderModel.find({ customer: id })
+
+    for (let i=0; i < customerOrderHistory.length;i++) {
+      await OrderModel.findByIdAndDelete(customerOrderHistory[i]._id)
+    }
+
+    await CustomerModel.findByIdAndDelete(id)
   
     res.status(200).json("Customer profile has been deleted.");
     

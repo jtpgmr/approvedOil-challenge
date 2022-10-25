@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import validateRequest from '../../middlewares/validateRequest.js';
 import * as orderControllers from "./orders.controllers.js"
-import orderSchema from './orders.validator.js';
+import orderSchema, { updateOrderSchema } from './orders.validator.js';
 import idParam from '../../utils/idParam.js';
 
 const orderRoutes = Router();
@@ -12,7 +12,7 @@ orderRoutes.get('/:id', validateRequest({ params: idParam }), orderControllers.f
 
 orderRoutes.post('/', validateRequest({ body: orderSchema }), orderControllers.createOrderController);
 
-// orderRoutes.patch('/:id', validateRequest({ params: idParam, body: updateProductSchema }), productControllers.updateProductController);
+orderRoutes.patch('/:id', validateRequest({ params: idParam, body: updateOrderSchema }), orderControllers.updateOrderController);
 
 orderRoutes.delete('/:id', validateRequest({ params: idParam }), orderControllers.deleteOrderController);
 

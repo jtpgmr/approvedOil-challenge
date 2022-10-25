@@ -2,9 +2,9 @@ const calculateTotalCost = (products) => {
   let total = 0
   for (let i = 0; i < products.length; i++) {
     console.log(products)
-    total += products[i].total
+    total += parseFloat(products[i].total)
   }
-  return total.toFixed(2)
+  return total
 }
 
 export default calculateTotalCost
