@@ -56,7 +56,7 @@ const findSingleOrderController = async (req, res) => {
     const orderingCustomer = await CustomerModel.findById(customer)
     const filteredCustomerData = filterObject(orderingCustomer, omitCustomerDataArray)
 
-    const orderedProducts = await orderedProductsMap(product)
+    const orderedProducts = await filterOrderedProducts(product)
 
     const totalCost = calculateTotalCost(orderedProducts)
 
@@ -159,20 +159,22 @@ const updateOrderController = async (req, res) => {
           return res.status(404).json(`Product with the ID ${productId} was not found.`)
         }
         // console.log(foundProduct.id == order.product[i].productId)
-        console.log(order.product.find((product) => product.productId == foundProduct.id))
-        order.product.find((product) => {
-          if (product.productId == foundProduct.id) {
-            return console.log("hiiii "+product)
+        // console.log(order.product.find((item) => item.productId == foundProduct.id))
+        order.product.find((item) => {
+          if (item.productId == foundProduct.id) {
+            item.quantity = product[0].quantity
+            return item.quantity
           }
         })
     }
+    console.log(order)
 
     await OrderModel.findByIdAndUpdate(
       {
         _id: id
       },
       {
-        $set: req.body
+        $set: order
       },
       {
         returnDocument: "after"
@@ -199,7 +201,7 @@ const updateOrderController = async (req, res) => {
     const jsonResponse = {
       "customer": filteredCustomerData,
       "product(s)": orderedProducts,
-      "totalCost": totalCost
+      "totalCost": totalCost.toFixed(2)
     }
 
     res.status(201).json(jsonResponse)
